@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f0; /* light pink background */
+        }
+
+        .navbar {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 100px;
+            gap: 50px;
+        }
+
+        .panel {
+            width: 200px;
+            height: 200px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: scale(1.05);
+            background-color: #f3e5f5;
+        }
+
+        .panel img {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        Student Management System
+    </div>
+
+    <div class="container">
+        <a href="/management/" class="panel">
+            <img src="https://img.icons8.com/ios-filled/100/000000/user-group-man-man.png" alt="Management Icon">
+            Management Panel
+        </a>
+         <a href="{% url 'student_login' %}" class="panel">
+        <img src="https://img.icons8.com/ios-filled/100/000000/graduation-cap.png" alt="Student Icon">
+        <div>Student Panel</div>
+    </a>
+    </div>
+
+</body>
+</html>
