@@ -63,7 +63,8 @@
                 <tr>
                     <td>{{ e.course.name }}</td>
                     <td>{{ e.marks }}</td>
-                    <td>{{ e.grade }}</td>
+                    <td>{{ e.grade|default:"—" }}</td>
+
                 </tr>
                 {% empty %}
                 <tr><td colspan="3">No enrollments found.</td></tr>

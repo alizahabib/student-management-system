@@ -49,7 +49,7 @@ def student_login(request):
     return render(request, 'student_panel/student_login.html')
 
 
-def student_dashboard(request):
+#def student_dashboard(request):
     token = request.session.get('jwt_token')
     student_id = request.session.get('student_id')
 
@@ -100,7 +100,48 @@ def student_dashboard(request):
     except jwt.InvalidTokenError:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'error': 'Invalid'}, status=401)
+        return redirect('student_login')#
+
+
+
+def student_dashboard(request):
+    token = request.session.get('jwt_token')
+    student_id = request.session.get('student_id')
+
+    if not token or not student_id:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'Session expired'}, status=401)
         return redirect('student_login')
+
+    try:
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+
+        # Optional double-check
+        if str(decoded.get('student_id')) != str(student_id):
+            return JsonResponse({'error': 'Invalid token'}, status=403)
+
+        # Fetch student and enrollment data
+        student = Student.objects.get(id=student_id)
+        enrollments = Enrollment.objects.filter(student=student)
+
+        # No grading logic here — grades already saved in DB by save_enrollment
+
+        # AJAX response for JS
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'ok'})
+
+        return render(request, 'student_panel/student_dashboard.html', {
+            'student': student,
+            'enrollments': enrollments,
+            'token': token
+        })
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'error': 'Token expired'}, status=401)
+    except jwt.DecodeError:
+        return JsonResponse({'error': 'Token decode error'}, status=401)
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
 
 
 def student_logout(request):
